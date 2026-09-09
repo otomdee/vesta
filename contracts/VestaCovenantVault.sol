@@ -275,7 +275,6 @@ contract VestaCovenantVault is ReentrancyGuard {
     function _redeem(address participant, Position storage position, bool early) private {
         uint256 shares = position.shares;
         position.exited = true;
-        totalPositionShares -= shares;
         (uint256 tokenAmount, uint256 ethAmount) =
             liquidityAdapter.removeLiquidity(address(this), shares);
         launchToken.safeTransfer(participant, tokenAmount);

@@ -9,8 +9,8 @@ contract MockCcaAdapter is IVestaAuctionAdapter {
     mapping(address auction => bool complete) public completed;
     mapping(address auction => uint256 price) public prices;
 
-    function setOutcome(address auction, uint256 clearingPrice, bool complete) external {
-        prices[auction] = clearingPrice;
+    function setOutcome(address auction, uint256 price, bool complete) external {
+        prices[auction] = price;
         completed[auction] = complete;
     }
 
