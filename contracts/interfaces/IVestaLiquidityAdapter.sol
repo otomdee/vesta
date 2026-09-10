@@ -13,8 +13,9 @@ pragma solidity ^0.8.26;
 interface IVestaLiquidityAdapter {
     /// @notice Initialize the token/ETH pool at the given clearing price.
     /// @param token     The ERC-20 launch token address.
-    /// @param clearingPrice  The CCA clearing price in Q96 format (token/ETH * 2^96).
-    ///                       On Sepolia the adapter converts this to sqrtPriceX96 internally.
+    /// @param clearingPrice  The CCA clearing price in Q96 format (currency/token * 2^96,
+    ///                       i.e. ETH per token). On Sepolia the adapter converts this to
+    ///                       sqrtPriceX96 via TokenPricing (with inversion).
     function initializePool(address token, uint256 clearingPrice) external;
 
     /// @notice Add token + ETH liquidity and return the position identifier.

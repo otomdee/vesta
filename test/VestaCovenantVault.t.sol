@@ -72,13 +72,17 @@ contract VestaCovenantVaultTest is Test {
         VestaCovenantVault.Position memory alicePosition = vault.positionOf(alice);
         VestaCovenantVault.Position memory bobPosition = vault.positionOf(bob);
         assertEq(alicePosition.tokenAmount, 400 ether);
-        assertEq(bobPosition.tokenAmount, 250 ether);
+        assertEq(bobPosition.tokenAmount, 750 ether);
         assertEq(alicePosition.ethAmount, 1 ether);
         assertEq(bobPosition.ethAmount, 3 ether);
         assertEq(alicePosition.shares, 1 ether);
         assertEq(bobPosition.shares, 3 ether);
-        assertEq(vault.totalCommittedTokens(), 650 ether);
-        assertEq(liquidity.totalToken(), 650 ether);
+        // Mock adapter returns ethAmount as the position id; one position
+        // is minted per participant.
+        assertEq(alicePosition.tokenId, 1 ether);
+        assertEq(bobPosition.tokenId, 3 ether);
+        assertEq(vault.totalCommittedTokens(), 1150 ether);
+        assertEq(liquidity.totalToken(), 1150 ether);
         assertEq(liquidity.totalEth(), 4 ether);
 
         vm.prank(team);
@@ -107,8 +111,9 @@ contract VestaCovenantVaultTest is Test {
         vault.earlyExit();
         assertEq(bob.balance, bobBalance + 2.7 ether);
         assertEq(vault.rewardPot(), 4.3 ether);
-        // A single pooled range redeems pro rata by LP shares, not by the user's source token amount.
-        assertEq(token.balanceOf(bob), 487.5 ether);
+        // The mock adapter pools all liquidity and redeems pro rata by shares.
+        // Bob holds 3/4 of shares over 1150 pooled tokens => 862.5 tokens.
+        assertEq(token.balanceOf(bob), 862.5 ether);
         vm.prank(bob);
         vm.expectRevert(VestaCovenantVault.AlreadyExited.selector);
         vault.earlyExit();
@@ -127,7 +132,7 @@ contract VestaCovenantVaultTest is Test {
         vault.withdrawAfterUnlock();
         assertEq(alice.balance, balanceBefore + 1 ether);
 
-        assertEq(token.balanceOf(alice), 162.5 ether);
+        assertEq(token.balanceOf(alice), 287.5 ether);
     }
 
     function testFuzzEnrollAcceptsAllValidBps(uint16 bps, uint96 amount) public {

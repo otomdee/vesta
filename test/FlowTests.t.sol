@@ -8,7 +8,7 @@ import { VestaCovenantVault } from "../contracts/VestaCovenantVault.sol";
 import { MockCcaAdapter } from "../contracts/mocks/MockCcaAdapter.sol";
 import { MockLiquidityAdapter } from "../contracts/mocks/MockLiquidityAdapter.sol";
 
-contract VestaCovenantVaultTest is Test {
+contract VestaFlowTest is Test {
     address internal constant AUCTION = address(0xA11CE);
     address internal alice = makeAddr("alice");
     address internal bob = makeAddr("bob");

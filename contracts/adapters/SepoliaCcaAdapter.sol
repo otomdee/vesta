@@ -16,13 +16,22 @@ import { Bid } from "continuous-clearing-auction/src/libraries/BidLib.sol";
 ///   CCALens v2.0.0                           : 0xc3C65F5453A3674aDb693cbdA3C842545cD30f53
 ///
 /// Interface mapping (IVestaAuctionAdapter → IContinuousClearingAuction):
-///   isAuctionComplete  → isGraduated()
+///   isAuctionComplete  → isGraduated() && block.number >= endBlock()
 ///   claimableAllocation → sum of Bid.tokensFilled for all bids owned by bidder
-///   clearingPrice      → clearingPrice() [Q96 token-per-ETH; see note below]
+///   clearingPrice      → clearingPrice() [Q96 currency-per-token; see note below]
 ///
-/// @dev clearingPrice() is returned in Q96 format (price = tokenAmount * 2^96 / currencyAmount).
+/// @dev clearingPrice() is returned in Q96 format (price = currencyAmount * 2^96 / tokenAmount,
+///      i.e. ETH per token — same convention as LBPStrategy.initialPriceX96).
 ///      The vault's liquidityAdapter (SepoliaLiquidityAdapter) converts this to sqrtPriceX96
+///      via Uniswap's TokenPricing library (with inversion, since ETH is currency0)
 ///      before calling the Uniswap v4 PoolManager.
+///
+/// @dev Bid IDs are 0-indexed: the first bid is id 0 and nextBidId() is empty-count.
+/// @dev Bid.tokensFilled is only populated after exitBid/exitPartiallyFilledBid.
+///      Callers must exit a bidder's winning bids before claimableAllocation reflects them.
+/// @dev clearingPrice()/isGraduated() are only as fresh as the last checkpoint().
+///      The team must call pokeCheckpoint(auction) (anyone can call CCA.checkpoint())
+///      after endBlock and before finalize/migrate so reads reflect the final price.
 contract SepoliaCcaAdapter is IVestaAuctionAdapter {
     /// @notice Thrown when the bid iteration loop exceeds the safety cap.
     error TooManyBids();
@@ -36,23 +45,36 @@ contract SepoliaCcaAdapter is IVestaAuctionAdapter {
     // -------------------------------------------------------------------------
 
     /// @inheritdoc IVestaAuctionAdapter
-    /// @dev The CCA is considered "complete" once it has graduated (raised ≥ requiredCurrencyRaised).
-    ///      Callers should ensure checkpoint() was called on the auction beforehand so that
-    ///      isGraduated() reflects the most up-to-date state.
+    /// @dev The CCA is complete once it has graduated (raised ≥ requiredCurrencyRaised)
+    ///      AND the end block has passed. isGraduated() alone can be true mid-auction,
+    ///      so both conditions are required. Call pokeCheckpoint() first so that
+    ///      isGraduated() reflects the latest state.
     function isAuctionComplete(address auction) external view returns (bool) {
-        return IContinuousClearingAuction(auction).isGraduated();
+        IContinuousClearingAuction cca = IContinuousClearingAuction(auction);
+        if (!cca.isGraduated()) return false;
+        return block.number >= cca.endBlock();
+    }
+
+    /// @notice Permissionlessly advances the CCA checkpoint so reads are fresh.
+    /// @dev Anyone can call CCA.checkpoint(); the team should call this after
+    ///      endBlock and before finalizeCovenants/migrate.
+    function pokeCheckpoint(address auction) external returns (uint256 clearingPriceQ96) {
+        IContinuousClearingAuction(auction).checkpoint();
+        clearingPriceQ96 = IContinuousClearingAuction(auction).clearingPrice();
     }
 
     /// @inheritdoc IVestaAuctionAdapter
-    /// @dev Iterates all bids up to nextBidId() and sums tokensFilled for the given bidder.
-    ///      This is O(n) in the number of bids submitted to the auction.  It is acceptable for
-    ///      testnet / demo use; for production a subgraph or off-chain index should be used.
+    /// @dev Iterates all bids 0..<nextBidId() and sums tokensFilled for the bidder.
+    ///      This is O(n) in the number of bids. Acceptable for testnet/demo;
+    ///      production should use an off-chain index of BidSubmitted/BidExited events.
+    ///      NOTE: only already-exited bids have tokensFilled set; un-exited
+    ///      winning bids read as 0 until exitBid/exitPartiallyFilledBid is called.
     function claimableAllocation(address auction, address bidder) external view returns (uint256 total) {
         IContinuousClearingAuction cca = IContinuousClearingAuction(auction);
         uint256 nextId = cca.nextBidId();
-        if (nextId > MAX_BID_SCAN + 1) revert TooManyBids();
-        // bid IDs are 1-indexed; nextBidId() is the next id to be assigned
-        for (uint256 id = 1; id < nextId; ++id) {
+        if (nextId > MAX_BID_SCAN) revert TooManyBids();
+        // bid IDs are 0-indexed; nextBidId() equals the bid count
+        for (uint256 id = 0; id < nextId; ++id) {
             Bid memory bid = cca.bids(id);
             if (bid.owner == bidder) {
                 total += bid.tokensFilled;
@@ -62,7 +84,7 @@ contract SepoliaCcaAdapter is IVestaAuctionAdapter {
 
     /// @inheritdoc IVestaAuctionAdapter
     /// @dev Returns the most recent on-chain clearing price in Q96 format
-    ///      (token / ETH expressed as a Q96 fixed-point number, i.e. price * 2^96).
+    ///      (ETH per token as a Q96 fixed-point number, i.e. price * 2^96).
     ///      Callers should ensure checkpoint() was called on the auction first so that
     ///      clearingPrice() reflects the final post-auction price.
     function clearingPrice(address auction) external view returns (uint256) {

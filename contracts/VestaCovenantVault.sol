@@ -29,6 +29,7 @@ contract VestaCovenantVault is ReentrancyGuard {
 
     struct Position {
         uint256 shares;
+        uint256 tokenId;
         uint256 tokenAmount;
         uint256 ethAmount;
         uint64 finalizedAt;
@@ -66,6 +67,7 @@ contract VestaCovenantVault is ReentrancyGuard {
     error PositionNotLocked();
     error TransferFailed();
     error InvalidRewardFunding();
+    error EmptyMigration();
 
     event LifecycleChanged(Lifecycle indexed lifecycle);
     event CovenantEnrolled(address indexed user, uint16 commitmentBps, uint256 escrowedEth);
@@ -199,43 +201,60 @@ contract VestaCovenantVault is ReentrancyGuard {
         emit CovenantsFinalized(totalCommittedTokens, totalEscrowedEth, length);
     }
 
-    /// @notice Initializes the configured pool, creates proportional positions, and begins the lock.
+    /// @notice Initializes the configured pool, then mints ONE locked LP
+    ///         position PER participant and begins the lock.
+    /// @dev Each participant gets their own adapter position: for the mock
+    ///      adapter `shares` is a fungible amount (tokenId == 0); for the
+    ///      Sepolia/v4 adapter each call mints a distinct ERC-721 whose token
+    ///      ID is stored as `tokenId`. Reward weight (`shares`) is always the
+    ///      participant's escrowed ETH, so rewards stay pro-rata by escrow
+    ///      regardless of adapter type.
     function migrate() external onlyStrategy nonReentrant {
         _requireLifecycle(Lifecycle.Finalized);
         uint256 totalEth = totalEscrowedEth;
+        if (totalEth == 0 || totalCommittedTokens == 0) revert EmptyMigration();
         launchToken.safeTransfer(address(liquidityAdapter), totalCommittedTokens);
         liquidityAdapter.initializePool(address(launchToken), auctionAdapter.clearingPrice(auction));
-        uint256 shares = liquidityAdapter.addLiquidity{ value: totalEth }(
-            address(launchToken), totalCommittedTokens, totalEth
-        );
         uint256 length = _participants.length;
         for (uint256 i; i < length; ++i) {
             address participant = _participants[i];
             Commitment memory commitment = _commitments[participant];
             if (!commitment.active) continue;
+            if (commitment.escrowedEth == 0) continue;
             uint256 tokenAmount = auctionAdapter.claimableAllocation(auction, participant)
                 * commitment.commitmentBps / BPS;
-            uint256 positionShares = shares * commitment.escrowedEth / totalEth;
+            if (tokenAmount == 0) continue;
+            // One adapter position per participant. The vault forwards exactly
+            // this participant's escrowed ETH with the call.
+            // `adapterId` is adapter-defined: a fungible amount for the mock
+            // adapter (which returns ethAmount), an ERC-721 token ID for the
+            // Sepolia/v4 adapter. Reward weight is always the escrowed ETH so
+            // rewards stay pro-rata by escrow regardless of adapter type.
+            uint256 adapterId = liquidityAdapter.addLiquidity{ value: commitment.escrowedEth }(
+                address(launchToken), tokenAmount, commitment.escrowedEth
+            );
             _positions[participant] = Position({
-                shares: positionShares,
+                shares: commitment.escrowedEth,
+                tokenId: adapterId,
                 tokenAmount: tokenAmount,
                 ethAmount: commitment.escrowedEth,
                 finalizedAt: uint64(block.timestamp),
                 unlockTime: uint64(block.timestamp) + lockDuration,
                 exited: false
             });
-            totalPositionShares += positionShares;
+            totalPositionShares += commitment.escrowedEth;
             emit PositionCreated(
                 participant,
-                positionShares,
+                commitment.escrowedEth,
                 tokenAmount,
                 commitment.escrowedEth,
                 block.timestamp + lockDuration
             );
         }
+        if (totalPositionShares == 0) revert EmptyMigration();
         lifecycle = Lifecycle.Migrated;
         emit LifecycleChanged(lifecycle);
-        emit PoolMigrated(totalCommittedTokens, totalEth, shares);
+        emit PoolMigrated(totalCommittedTokens, totalEth, totalPositionShares);
     }
 
     /// @notice Adds ETH to the deterministic reward pot once positions exist.
@@ -274,10 +293,13 @@ contract VestaCovenantVault is ReentrancyGuard {
     }
 
     function _redeem(address participant, Position storage position, bool early) private {
-        uint256 shares = position.shares;
+        // tokenId is the adapter-defined position identifier (fungible amount
+        // for the mock adapter, ERC-721 ID for Sepolia/v4). It is always set
+        // by migrate(); shares carries the reward weight.
+        uint256 adapterId = position.tokenId;
         position.exited = true;
         (uint256 tokenAmount, uint256 ethAmount) =
-            liquidityAdapter.removeLiquidity(address(this), shares);
+            liquidityAdapter.removeLiquidity(address(this), adapterId);
         launchToken.safeTransfer(participant, tokenAmount);
         uint256 penalty;
         if (early) {
