@@ -66,7 +66,7 @@ contract VestaStrategy {
         emit CovenantsFinalized(address(vault), vault.totalCommittedTokens());
     }
 
-    /// @notice Mints demo tokens to the vault then performs the one-time adapter-mediated migration.
+    /// @notice Mints tokens to the vault then performs the one-time adapter-mediated migration.
     function migrate() external onlyOwner {
         uint256 committedTokens = vault.totalCommittedTokens();
         launchToken.mint(address(vault), committedTokens);

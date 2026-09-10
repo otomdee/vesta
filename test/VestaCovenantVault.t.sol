@@ -38,8 +38,10 @@ contract VestaCovenantVaultTest is Test {
     function testEnrollUpdateAndCancelConservesEscrow() public {
         vm.prank(alice);
         vault.enrollCovenant{ value: 1 ether }(4_000);
+
         vm.prank(alice);
         vault.updateCovenant{ value: 0.5 ether }(7_000);
+
         VestaCovenantVault.Commitment memory commitment = vault.commitmentOf(alice);
         assertEq(commitment.commitmentBps, 7_000);
         assertEq(commitment.escrowedEth, 1.5 ether);
@@ -114,13 +116,17 @@ contract VestaCovenantVaultTest is Test {
 
     function testWithdrawAfterUnlock() public {
         _enrollAndFinalize();
+
         vm.prank(team);
         strategy.migrate();
+
         vm.warp(block.timestamp + 7 days);
+
         uint256 balanceBefore = alice.balance;
         vm.prank(alice);
         vault.withdrawAfterUnlock();
         assertEq(alice.balance, balanceBefore + 1 ether);
+
         assertEq(token.balanceOf(alice), 162.5 ether);
     }
 
@@ -137,11 +143,16 @@ contract VestaCovenantVaultTest is Test {
 
     function _enrollAndFinalize() internal {
         vm.prank(alice);
+        //0.4E should go to the LP, if the entire 1E is used to purchase in the CCA
         vault.enrollCovenant{ value: 1 ether }(4_000);
         vm.prank(bob);
+        //1.5E should go to the LP
         vault.enrollCovenant{ value: 3 ether }(5_000);
+
+        //these received token amounts are arbitrary, since the CCA is mocked, they also assume the entire subscribed amount was filled.
         auction.setAllocation(AUCTION, alice, 1_000 ether);
-        auction.setAllocation(AUCTION, bob, 500 ether);
+        auction.setAllocation(AUCTION, bob, 1500 ether);
+
         auction.setOutcome(AUCTION, 2e15, true);
         vm.prank(team);
         strategy.finalizeCovenants();

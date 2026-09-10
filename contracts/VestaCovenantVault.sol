@@ -120,6 +120,7 @@ contract VestaCovenantVault is ReentrancyGuard {
     }
 
     /// @notice Escrow ETH and select the percentage of the eventual CCA allocation to lock as liquidity.
+    //commitmentBps is this percentage
     function enrollCovenant(uint16 commitmentBps) external payable nonReentrant {
         _requireLifecycle(Lifecycle.EnrollmentOpen);
         if (commitmentBps > BPS) revert InvalidCommitmentBps();

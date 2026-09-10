@@ -26,7 +26,7 @@
 - [ ] Initialize Foundry.
 - [ ] Add OpenZeppelin and the official Uniswap CCA source/interfaces as dependencies.
 - [ ] Decide whether direct CCA/v4 local deployment is feasible. Record the decision and adapter boundary in `README.md`.
-- [ ] Add an architecture diagram matching `PRD.md`.
+- [ ] Add an architecture diagram.
 - [ ] Define custom errors and event names before writing implementation.
 
 **Exit criterion:** `forge build` succeeds with imports resolved.
@@ -155,7 +155,7 @@ Start only after Phase 6 passes.
 - [ ] Write `README.md` with product overview, architecture, prerequisites, exact commands, and local demo flow.
 - [ ] Explain the use of Uniswap CCA and any mock adapter in a dedicated "Integration status" section.
 - [ ] Add a limitations/security section.
-- [ ] Include the architecture image and link to `PRD.md`.
+- [ ] Include the architecture image.
 - [ ] Verify from scratch:
   - `forge build`;
   - `forge test`;
