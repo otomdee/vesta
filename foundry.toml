@@ -7,8 +7,22 @@ libs = ["lib"]
 solc_version = "0.8.26"
 optimizer = true
 optimizer_runs = 200
-remappings = ["@openzeppelin/=lib/openzeppelin-contracts/"]
+remappings = [
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "continuous-clearing-auction/=lib/continuous-clearing-auction/",
+    "liquidity-launcher/=lib/liquidity-launcher/",
+    "@uniswap/v4-core/=lib/v4-core/",
+    "@uniswap/v4-periphery/=lib/v4-periphery/",
+    "forge-std/=lib/forge-std/src/",
+    "solady/=lib/continuous-clearing-auction/lib/solady/",
+]
 fs_permissions = [{ access = "read-write", path = "./frontend/src/generated" }]
+
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}", chain = 11155111 }
 
 [fmt]
 line_length = 100
