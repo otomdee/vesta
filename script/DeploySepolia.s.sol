@@ -50,6 +50,8 @@ contract DeploySepolia is Script {
     // Lock configuration — adjust before deploy.
     uint64 internal constant LOCK_DURATION = 7 days;
     uint16 internal constant EARLY_EXIT_PENALTY_BPS = 1_000; // 10 %
+    address vestaDemoSepolia = 0x3b3eAfb6D38fe0F9b378d78E3DA11311BF8Abe40; //change this to whatever token is to be used.
+    MockLaunchToken token = MockLaunchToken(vestaDemoSepolia);
 
     function run() external returns (VestaStrategy strategy) {
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
@@ -64,8 +66,8 @@ contract DeploySepolia is Script {
 
         // Deploy a test launch token (mintable by the strategy).
         // For a real launch the token would already exist.
-        MockLaunchToken token = new MockLaunchToken();
-        console2.log("  LaunchToken:", address(token));
+        // MockLaunchToken token = new MockLaunchToken();
+        // console2.log("  LaunchToken:", address(token));
 
         // Deploy the real Sepolia adapters — no mock code in this path.
         SepoliaCcaAdapter ccaAdapter = new SepoliaCcaAdapter();
