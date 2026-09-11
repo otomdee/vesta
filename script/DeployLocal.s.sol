@@ -28,13 +28,23 @@ contract DeployLocal is Script {
         strategy.openEnrollment();
         vm.stopBroadcast();
 
-        string memory json = "deployment";
-        json = vm.serializeAddress(json, "strategy", address(strategy));
-        json = vm.serializeAddress(json, "vault", address(strategy.vault()));
-        json = vm.serializeAddress(json, "token", address(token));
-        json = vm.serializeAddress(json, "auctionAdapter", address(auctionAdapter));
-        json = vm.serializeAddress(json, "liquidityAdapter", address(liquidityAdapter));
-        json = vm.serializeAddress(json, "demoAuction", DEMO_AUCTION);
+        // NOTE: vm.serialize* chaining drops all but the last key in this
+        // forge version, so the JSON is built explicitly instead.
+        string memory json = string.concat(
+            '{"strategy":"',
+            vm.toString(address(strategy)),
+            '","vault":"',
+            vm.toString(address(strategy.vault())),
+            '","token":"',
+            vm.toString(address(token)),
+            '","auctionAdapter":"',
+            vm.toString(address(auctionAdapter)),
+            '","liquidityAdapter":"',
+            vm.toString(address(liquidityAdapter)),
+            '","demoAuction":"',
+            vm.toString(DEMO_AUCTION),
+            '"}'
+        );
         vm.writeJson(json, "./frontend/src/generated/deployment.json");
     }
 }

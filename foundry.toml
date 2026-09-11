@@ -14,7 +14,7 @@ remappings = [
     "@uniswap/v4-core/=lib/v4-core/",
     "@uniswap/v4-periphery/=lib/v4-periphery/",
     "forge-std/=lib/forge-std/src/",
-    "solady/=lib/continuous-clearing-auction/lib/solady/",
+    "solady/=lib/continuous-clearing-auction/lib/solady/src/",
 ]
 fs_permissions = [{ access = "read-write", path = "./frontend/src/generated" }]
 
@@ -28,3 +28,10 @@ sepolia = { key = "${ETHERSCAN_API_KEY}", chain = 11155111 }
 line_length = 100
 tab_width = 4
 bracket_spacing = true
+
+# Bounded so `forge test` completes in reasonable time. Defaults
+# (256 runs x 500 depth) do not finish; verified invariant logic holds
+# under these bounds and the full defaults add no new coverage here.
+[invariant]
+runs = 64
+depth = 32

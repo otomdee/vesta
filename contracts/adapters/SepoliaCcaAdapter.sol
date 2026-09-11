@@ -69,7 +69,11 @@ contract SepoliaCcaAdapter is IVestaAuctionAdapter {
     ///      production should use an off-chain index of BidSubmitted/BidExited events.
     ///      NOTE: only already-exited bids have tokensFilled set; un-exited
     ///      winning bids read as 0 until exitBid/exitPartiallyFilledBid is called.
-    function claimableAllocation(address auction, address bidder) external view returns (uint256 total) {
+    function claimableAllocation(address auction, address bidder)
+        external
+        view
+        returns (uint256 total)
+    {
         IContinuousClearingAuction cca = IContinuousClearingAuction(auction);
         uint256 nextId = cca.nextBidId();
         if (nextId > MAX_BID_SCAN) revert TooManyBids();

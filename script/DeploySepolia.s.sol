@@ -11,10 +11,24 @@ import { SepoliaLiquidityAdapter } from "../contracts/adapters/SepoliaLiquidityA
 ///
 /// Prerequisites:
 ///   1. A ContinuousClearingAuction must already exist on Sepolia.
-///      Create one via the factory at 0x000000001F26a0044BaA66024e7b6599c61963F8 or via
+///      Create one with script/LaunchCcaSepolia.s.sol, via the factory at
+///      0x000000001F26a0044BaA66024e7b6599c61963F8, or via
 ///      https://app.uniswap.org/launch.  Export its address as CCA_AUCTION_ADDRESS.
-///   2. Set environment variables (see .env.example):
+///   2. The auction MUST sell the same token passed as launchToken below.
+///      This script deploys a fresh mintable MockLaunchToken, so it only fits
+///      a throwaway test auction created for that token — for a real launch,
+///      deploy the strategy against the real token contract instead (the
+///      strategy cannot mint tokens it was not granted mint authority over).
+///   3. Set environment variables (see .env.example):
 ///        PRIVATE_KEY, SEPOLIA_RPC_URL, CCA_AUCTION_ADDRESS
+///
+/// Operator order after enrollment (enforced by the adapters):
+///   a. bidders submit CCA bids AND enrollCovenant escrow (separate txs);
+///   b. after endBlock: pokeCheckpoint on the CCA (via SepoliaCcaAdapter),
+///      then EXIT winning bids (tokensFilled is only set at exit);
+///   c. strategy.finalizeCovenants() reads the exited allocations;
+///   d. strategy.migrate() mints one v4 NFT per participant (each user gets
+///      their own position — no shared/fractional token IDs).
 ///
 /// Run (dry-run):
 ///   forge script script/DeploySepolia.s.sol --rpc-url $SEPOLIA_RPC_URL --dry-run -vvv
@@ -26,7 +40,7 @@ import { SepoliaLiquidityAdapter } from "../contracts/adapters/SepoliaLiquidityA
 ///     --verify \
 ///     -vvv
 ///
-/// Well-known Sepolia contract addresses used by the adapters:
+/// known Sepolia contract addresses used by the adapters:
 ///   ContinuousClearingAuctionFactory v2.1.0 : 0x000000001F26a0044BaA66024e7b6599c61963F8
 ///   LiquidityLauncher v3.0.0               : 0x00004c4ccc709Ef590F7C81102C0689F0263D4e9
 ///   CCALens v2.0.0                         : 0xc3C65F5453A3674aDb693cbdA3C842545cD30f53
@@ -87,6 +101,8 @@ contract DeploySepolia is Script {
         json = vm.serializeUint(json, "chainId", block.chainid);
         vm.writeJson(json, "./frontend/src/generated/deployment.json");
 
-        console2.log("\nDeployment complete.  Addresses written to frontend/src/generated/deployment.json");
+        console2.log(
+            "\nDeployment complete.  Addresses written to frontend/src/generated/deployment.sepolia.json"
+        );
     }
 }

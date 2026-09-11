@@ -70,6 +70,20 @@ forge script script/DemoLocal.s.sol:DemoLocal --rpc-url http://127.0.0.1:8545 --
 
 Fund rewards, claim, and exit actions are available in the UI. For a terminal-only path, the Foundry test `testRewardsAndEarlyExitRetainPenalty` is the reference.
 
+## Demo frontend (vanilla, Sepolia)
+
+`frontend/` is plain HTML/CSS/JS (ethers.js via CDN, no build step). It is Sepolia-only and MetaMask-only:
+
+```sh
+# 1. Deploy Vesta against your Sepolia CCA auction (needs funded key + SEPOLIA_RPC_URL + CCA_AUCTION_ADDRESS)
+forge script script/DeploySepolia.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast --verify
+# 2. Serve the UI (browsers block file:// fetches, so don't double-click index.html)
+cd frontend && python3 -m http.server 8000
+# open http://127.0.0.1:8000
+```
+
+Click **Load deployment.sepolia.json → Connect**, then connect MetaMask as team and as participant (switch accounts in MetaMask and re-click the role button). Flow: participant submits a CCA bid + enrolls covenant → team pokes checkpoint → participant exits CCA bid and claims → team finalizes + migrates → team funds rewards → participant claims / early-exits / withdraws after unlock. The UI warns when enrolled bidders still read 0 allocation (exit first) and links position NFTs and txs to Sepolia Etherscan.
+
 ## Integration status
 
 The production-facing shape intentionally preserves Uniswap CCA as the price-discovery source and Uniswap v4 as the liquidity destination. The present `MockCcaAdapter` allows a test operator to set completed outcomes and per-user claims; the `MockLiquidityAdapter` records pool inputs and owns proportional demo shares. Replacing those adapters with the actual CCA claim reads and v4 position-manager calls is required before any real deployment.

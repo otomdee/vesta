@@ -27,16 +27,14 @@ interface IPMPermit2 {
     function permit2() external view returns (address);
 }
 
-/// @notice Sepolia fork tests proving the Sepolia adapters work against the REAL
-///         Uniswap CCA + v4 contracts (not mocks) and that the vault's per-user
+/// @notice Sepolia fork tests proving the Sepolia adapters work against the sepolia
+///         Uniswap CCA + v4 contracts and that the vault's per-user
 ///         NFT model has no double-burn.
 ///
 /// Run:
 ///   SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com \
 ///     forge test --match-path test/sepolia/* -vvv
 ///
-/// No live broadcast is performed; everything runs on a local fork.
-/// Live Sepolia runs remain manual.
 contract SepoliaAdaptersForkTest is Test {
     address internal constant CCA_FACTORY = 0x000000001F26a0044BaA66024e7b6599c61963F8;
     address internal constant POSITION_MANAGER = 0x429ba70129df741B2Ca2a85BC3A2a3328e5c09b4;
@@ -66,9 +64,8 @@ contract SepoliaAdaptersForkTest is Test {
     uint64 internal claimBlock;
 
     function setUp() public {
-        string memory rpc = vm.envOr(
-            "SEPOLIA_RPC_URL", string("https://ethereum-sepolia-rpc.publicnode.com")
-        );
+        string memory rpc =
+            vm.envOr("SEPOLIA_RPC_URL", string("https://ethereum-sepolia-rpc.publicnode.com"));
         vm.createSelectFork(rpc);
 
         vm.deal(team, 20 ether);
@@ -142,9 +139,11 @@ contract SepoliaAdaptersForkTest is Test {
 
     function _submitBids() internal returns (uint256 aliceBid, uint256 bobBid) {
         vm.prank(alice);
-        aliceBid = auction.submitBid{ value: 1 ether }(MAX_PRICE, 1 ether, alice, FLOOR_PRICE, bytes(""));
+        aliceBid =
+            auction.submitBid{ value: 1 ether }(MAX_PRICE, 1 ether, alice, FLOOR_PRICE, bytes(""));
         vm.prank(bob);
-        bobBid = auction.submitBid{ value: 3 ether }(MAX_PRICE, 3 ether, bob, FLOOR_PRICE, bytes(""));
+        bobBid =
+            auction.submitBid{ value: 3 ether }(MAX_PRICE, 3 ether, bob, FLOOR_PRICE, bytes(""));
     }
 
     function testFork_CompletionRequiresEndBlock() public {
@@ -193,15 +192,13 @@ contract SepoliaAdaptersForkTest is Test {
 
         // Pool must open at the INVERTED price: v4 price is token/ETH while
         // the CCA price is ETH/token. Pin the canonical TokenPricing result.
-        uint160 expectedSqrt = TokenPricing.convertToSqrtPriceX96(
-            TokenPricing.convertToPriceX192(FLOOR_PRICE, true)
-        );
+        uint160 expectedSqrt =
+            TokenPricing.convertToSqrtPriceX96(TokenPricing.convertToPriceX192(FLOOR_PRICE, true));
         assertEq(liquidityAdapter.sqrtPriceX96Stored(), expectedSqrt, "price must be inverted");
 
         token.mint(address(liquidityAdapter), 1000 ether);
-        uint256 tokenId = liquidityAdapter.addLiquidity{ value: 1 ether }(
-            address(token), 1000 ether, 1 ether
-        );
+        uint256 tokenId =
+            liquidityAdapter.addLiquidity{ value: 1 ether }(address(token), 1000 ether, 1 ether);
 
         assertEq(tokenId, nextBefore, "must return freshly minted token id");
         assertEq(
@@ -248,9 +245,7 @@ contract SepoliaAdaptersForkTest is Test {
         uint256 bobAlloc = ccaAdapter.claimableAllocation(address(auction), bob);
         assertGt(aliceAlloc, 0, "alice allocation must be set");
         uint256 committed = aliceAlloc * 4_000 / 10_000;
-        assertEq(
-            vault.totalCommittedTokens(), committed + bobAlloc * 5_000 / 10_000
-        );
+        assertEq(vault.totalCommittedTokens(), committed + bobAlloc * 5_000 / 10_000);
 
         vm.prank(team);
         strategy.migrate();

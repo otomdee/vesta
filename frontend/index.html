@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vesta — Sepolia</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Vesta <span class="tag">sepolia</span></h1>
+    <p class="subtitle">Covenant liquidity for CCA launches — vanilla JS UI on Sepolia (live CCA + Uniswap v4).</p>
+    <div id="netStatus" class="netstatus">not connected</div>
+  </header>
+
+  <main>
+    <!-- Connection / config -->
+    <section class="card">
+      <h2>1 · Connection &amp; contracts</h2>
+      <div class="row">
+        <label>RPC URL
+          <input id="rpcUrl" type="text" value="https://ethereum-sepolia-rpc.publicnode.com" spellcheck="false" />
+        </label>
+        <div class="btnrow">
+          <button id="btnLoadDeployment" type="button">Load deployment.sepolia.json</button>
+          <button id="btnConnect" type="button" class="primary">Connect</button>
+        </div>
+      </div>
+      <div class="grid2">
+        <label>Strategy <input id="addrStrategy" type="text" placeholder="0x…" spellcheck="false" /></label>
+        <label>CCA auction <input id="addrAuction" type="text" placeholder="0x…" spellcheck="false" /></label>
+      </div>
+      <p class="hint">Vault, token and adapter addresses are read from the strategy contract. Written by <code>forge script script/DeploySepolia.s.sol</code> to <code>frontend/src/generated/deployment.sepolia.json</code>.</p>
+      <div id="contractAddrs" class="kv"></div>
+    </section>
+
+    <!-- Wallets (MetaMask only) -->
+    <section class="card">
+      <h2>2 · Wallets <span class="muted">(MetaMask, Sepolia network)</span></h2>
+      <div class="grid2">
+        <div class="role">
+          <h3>Launch team</h3>
+          <div class="btnrow">
+            <button type="button" data-metamask="team">Connect MetaMask as team</button>
+          </div>
+          <div class="kv" id="walletTeam"></div>
+        </div>
+        <div class="role">
+          <h3>Participant (bidder)</h3>
+          <div class="btnrow">
+            <button type="button" data-metamask="user">Connect MetaMask as participant</button>
+          </div>
+          <div class="kv" id="walletUser"></div>
+        </div>
+      </div>
+      <p class="hint">One MetaMask account is active at a time — click the role button again after switching accounts. Team-only actions revert unless sent from the strategy owner. No private keys ever touch this page.</p>
+    </section>
+
+    <!-- Real CCA auction -->
+    <section class="card">
+      <h2>3 · CCA auction <span class="muted">(live, Uniswap factory v2.1.0)</span></h2>
+      <div id="auctionInfo" class="kv"></div>
+      <h3>Bid <span class="muted">(participant wallet — separate from the covenant escrow)</span></h3>
+      <div class="row">
+        <label>Max price (ETH/token)
+          <input id="bidMaxPrice" type="text" value="0.002" inputmode="decimal" />
+        </label>
+        <label>Amount (ETH)
+          <input id="bidAmount" type="text" value="0.1" inputmode="decimal" />
+        </label>
+        <button id="btnSubmitBid" type="button" class="primary">Submit bid</button>
+      </div>
+      <p class="hint">Max price is rounded <em>up</em> to the auction's tick grid. Bids spread across blocks; exiting is required before the vault can count your allocation.</p>
+      <h3>My bids</h3>
+      <div id="myBids"><span class="muted">—</span></div>
+      <div class="btnrow wrap">
+        <button id="btnPoke" type="button">Poke checkpoint (anyone)</button>
+        <button id="btnRefreshAuction" type="button">Refresh auction</button>
+      </div>
+    </section>
+
+    <!-- Bidder enrollment -->
+    <section class="card">
+      <h2>4 · Covenant enrollment <span class="muted">(participant)</span></h2>
+      <div class="row">
+        <label>Acting address
+          <input id="userAddr" type="text" placeholder="defaults to participant wallet" spellcheck="false" />
+        </label>
+        <button id="btnUseWallet" type="button">Use participant wallet</button>
+      </div>
+      <div class="row">
+        <label>Commitment (% of allocation)
+          <input id="enrollBpsPct" type="text" value="40" inputmode="decimal" />
+        </label>
+        <label>ETH to escrow
+          <input id="enrollEth" type="text" value="0.1" inputmode="decimal" />
+        </label>
+      </div>
+      <div class="btnrow wrap">
+        <button id="btnEnroll" type="button" class="primary">Enroll</button>
+        <button id="btnUpdate" type="button">Update</button>
+        <button id="btnCancel" type="button">Cancel + refund</button>
+      </div>
+      <div id="userInfo" class="kv"></div>
+    </section>
+
+    <!-- Launch dashboard -->
+    <section class="card">
+      <h2>5 · Launch dashboard <span class="muted">(team)</span></h2>
+      <div id="launchInfo" class="kv"></div>
+      <div id="finalizeWarn" class="warn" hidden></div>
+      <h3>Participants</h3>
+      <div id="participants"><span class="muted">—</span></div>
+      <div class="btnrow wrap">
+        <button id="btnOpenEnrollment" type="button">Open enrollment</button>
+        <button id="btnFinalize" type="button">Finalize covenants</button>
+        <button id="btnMigrate" type="button">Migrate to LP</button>
+        <label class="inline">Fund rewards (ETH)
+          <input id="fundAmount" type="text" value="0.1" inputmode="decimal" />
+        </label>
+        <button id="btnFund" type="button">Fund rewards</button>
+        <button id="btnRefresh" type="button">Refresh</button>
+      </div>
+    </section>
+
+    <!-- Position -->
+    <section class="card">
+      <h2>6 · Position, rewards &amp; exit <span class="muted">(participant)</span></h2>
+      <div id="positionInfo" class="kv"></div>
+      <div class="btnrow wrap">
+        <button id="btnClaim" type="button">Claim rewards</button>
+        <button id="btnWithdraw" type="button">Withdraw after unlock</button>
+        <button id="btnEarlyExit" type="button" class="danger">Early exit (penalty)</button>
+      </div>
+    </section>
+
+    <!-- Timeline / log -->
+    <section class="card">
+      <h2>7 · Lifecycle &amp; activity</h2>
+      <ol id="timeline" class="timeline"></ol>
+      <h3>Transaction log</h3>
+      <ol id="txlog" class="txlog"></ol>
+    </section>
+  </main>
+
+  <footer>
+    <p>Vanilla HTML/CSS/JS only · ethers.js via CDN · Sepolia (chain 11155111) · live CCA + v4 adapters, no mocks.</p>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>

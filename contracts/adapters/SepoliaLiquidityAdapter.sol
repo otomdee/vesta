@@ -130,7 +130,7 @@ contract SepoliaLiquidityAdapter is IVestaLiquidityAdapter {
             fee: POOL_FEE,
             tickSpacing: TICK_SPACING,
             hooks: IHooks(address(0)) // no hooks
-        });
+         });
 
         // Convert Q96 currency-per-token clearing price to sqrtPriceX96.
         // Same conversion as LiquidityLauncher LBPStrategy: invert because
@@ -218,7 +218,8 @@ contract SepoliaLiquidityAdapter is IVestaLiquidityAdapter {
         if (shares == 0) revert InvalidShares();
 
         // Encode: BURN_POSITION → TAKE_PAIR
-        bytes memory actions = abi.encodePacked(uint8(Actions.BURN_POSITION), uint8(Actions.TAKE_PAIR));
+        bytes memory actions =
+            abi.encodePacked(uint8(Actions.BURN_POSITION), uint8(Actions.TAKE_PAIR));
 
         bytes[] memory params = new bytes[](2);
         // BURN_POSITION: tokenId, amount0Min, amount1Min, hookData (0 slippage for demo)
