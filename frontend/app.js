@@ -130,6 +130,12 @@ async function loadDeploymentFile() {
 }
 
 async function connect() {
+  if (typeof ethers === "undefined") {
+    $("netStatus").className = "netstatus err";
+    $("netStatus").textContent = "ethers.js CDN failed to load — check network";
+    log("❌ connect failed — ethers is not defined (CDN blocked? reload the page)", "fail");
+    return;
+  }
   try {
     S.provider = new ethers.JsonRpcProvider($("rpcUrl").value.trim());
     const net = await S.provider.getNetwork();
@@ -226,6 +232,10 @@ async function metamaskProvider() {
 }
 
 async function useMetaMask(role) {
+  if (typeof ethers === "undefined") {
+    log("❌ wallet failed — ethers is not defined (CDN blocked? reload the page)", "fail");
+    return;
+  }
   try {
     const bp = await metamaskProvider();
     const signer = await bp.getSigner();
@@ -558,5 +568,9 @@ $("btnUseWallet").addEventListener("click", () => {
   }
 });
 if (typeof ethers === "undefined") {
-  document.getElementById("netStatus").textContent = "ethers.js CDN failed to load — check network";
+  var el = document.getElementById("netStatus");
+  if (el) {
+    el.className = "netstatus err";
+    el.textContent = "ethers.js CDN failed to load — check network";
+  }
 }

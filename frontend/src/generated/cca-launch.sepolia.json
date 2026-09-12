@@ -1,10 +1,10 @@
 {
-  "auction": "0xB937ABBbb67F7395d8F481D6D2E276206f1eA800",
+  "auction": "0x4bbdFed34209AEC656d3206671F884A1792782aE",
   "token": "0x3b3eAfb6D38fe0F9b378d78E3DA11311BF8Abe40",
   "supply": "1000000000000000000000000",
-  "startBlock": "11680905",
-  "endBlock": "11681005",
-  "claimBlock": "11681015",
-  "floorPriceQ96": "77371252455336267181195264",
+  "startBlock": "11685319",
+  "endBlock": "11685519",
+  "claimBlock": "11685529",
+  "floorPriceQ96": "19342813113834066795298816",
   "chainId": "11155111"
 }

@@ -15,8 +15,7 @@ import { SepoliaLiquidityAdapter } from "../contracts/adapters/SepoliaLiquidityA
 ///      0x000000001F26a0044BaA66024e7b6599c61963F8, or via
 ///      https://app.uniswap.org/launch.  Export its address as CCA_AUCTION_ADDRESS.
 ///   2. The auction MUST sell the same token passed as launchToken below.
-///      This script deploys a fresh mintable MockLaunchToken, so it only fits
-///      a throwaway test auction created for that token — for a real launch,
+///      for a real launch,
 ///      deploy the strategy against the real token contract instead (the
 ///      strategy cannot mint tokens it was not granted mint authority over).
 ///   3. Set environment variables (see .env.example):
