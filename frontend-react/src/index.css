@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ─── Design tokens ─── */
+:root {
+  /* Backgrounds */
+  --bg:           #201713;
+  --card:         #E8D8B7;
+  --card-border:  #BFA987;
+
+  /* Text */
+  --text:         #F5EAD5;
+  --muted:        #BEAB91;
+  --muted-dark:   #675344;
+
+  /* Borders */
+  --border:       #675344;
+
+  /* Accents */
+  --accent-red:   #C45139;
+  --accent-teal:  #78AAA0;
+
+  /* Typography */
+  --font-display: 'Archivo Narrow', serif;
+  --font-body:    'IBM Plex Sans', sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+}
+
+/* ─── Reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ─── Selection ─── */
+::selection {
+  background: var(--accent-teal);
+  color: var(--bg);
+}
+
+/* ─── Links ─── */
+a {
+  color: inherit;
+}
+
+/* ─── Details/Summary ─── */
+details summary::-webkit-details-marker {
+  color: var(--muted);
+}

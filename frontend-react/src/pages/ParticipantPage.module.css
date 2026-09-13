@@ -1,0 +1,485 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  padding: 32px 48px 40px;
+  flex: 1;
+}
+
+/* ── Title row ── */
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.pageTag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.pageTitle {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+}
+
+.walletRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.walletBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 10px 16px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.walletBadge svg { color: var(--accent-teal); }
+
+.connectWalletBtn {
+  background: var(--accent-red);
+  color: var(--text);
+  border: none;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.connectWalletBtn:hover { opacity: 0.85; }
+
+.useWalletBtn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.useWalletBtn:hover { color: var(--text); }
+
+/* ── Layout ── */
+.grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.panels {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--card);
+  padding: 28px;
+  color: var(--bg);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 20px;
+}
+
+.cardTag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted-dark);
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.cardHeading {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ── Auction meta ── */
+.auctionMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted-dark);
+}
+
+.greenPill {
+  background: #C8E6C0;
+  color: #1E5C1A;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.dimPill {
+  background: var(--card-border);
+  color: var(--muted-dark);
+  padding: 3px 8px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Enrolled badge ── */
+.enrolledBadge {
+  border: 1px solid var(--card-border);
+  padding: 8px 12px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+/* ── Reward pot ── */
+.rewardPot {
+  text-align: right;
+}
+
+.rewardPotLabel {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted-dark);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.rewardPotVal {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--bg);
+}
+
+/* ── Bid grid ── */
+.bidGrid, .enrollGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+/* ── Inputs ── */
+.inputLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--bg);
+}
+
+.input {
+  display: block;
+  margin-top: 6px;
+  height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--card-border);
+  background: #F5EAD5;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--bg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input::placeholder { color: #8A755C; }
+.input:focus { border-color: var(--bg); }
+
+.inputHint {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted-dark);
+  margin: 8px 0 16px;
+}
+
+/* ── Buttons ── */
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  color: var(--text);
+  border: none;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.primaryBtn:hover:not(:disabled) { opacity: 0.8; }
+.primaryBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: var(--bg);
+  border: 1px solid var(--card-border);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.secondaryBtn:hover:not(:disabled) { background: rgba(0,0,0,0.06); }
+.secondaryBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.dangerBtn {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: #9C3525;
+  border: 1px solid #C0806E;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.dangerBtn:hover:not(:disabled) { background: rgba(196, 81, 57, 0.08); }
+.dangerBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ghostBtn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.ghostBtn:hover { color: var(--text); }
+
+.ghostBtnSm {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--muted-dark);
+  padding: 0 12px;
+  font-size: 11px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  margin-top: 18px;
+  height: 44px;
+  white-space: nowrap;
+}
+
+/* ── Bids table ── */
+.bidsSection { margin-top: 24px; }
+
+.subTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.bidsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.bidsTable thead tr {
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.bidsTable th {
+  padding: 10px 0;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted-dark);
+  text-align: left;
+}
+
+.bidsTable td {
+  padding: 12px 0;
+  font-family: var(--font-mono);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.tableBtn {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--bg);
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.tableBtn:hover { background: rgba(0,0,0,0.08); }
+
+.pokRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* ── Address row ── */
+.addrRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* ── Enroll buttons ── */
+.enrollBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+/* ── DL ── */
+.dl {
+  margin: 0;
+  font-size: 12px;
+  border-top: 1px solid var(--card-border);
+  margin-top: 16px;
+}
+
+.dlRow {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--card-border);
+  padding: 10px 0;
+}
+
+.dlRow dt { color: var(--muted-dark); }
+.dlRow dd {
+  font-family: var(--font-mono);
+  margin: 0;
+  color: var(--bg);
+}
+
+.dlRow dd a {
+  color: var(--bg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Position actions ── */
+.positionBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ── Empty state ── */
+.emptyState {
+  font-size: 13px;
+  color: var(--muted-dark);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Activity ── */
+.activity {
+  margin-top: 24px;
+  margin-left: 272px;
+}
+
+.activityHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.activityTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.tealBtn {
+  background: transparent;
+  border: none;
+  color: var(--accent-teal);
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.logEntry {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.logTime {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  min-width: 72px;
+  font-size: 11px;
+}
+
+.logMsg { flex: 1; color: var(--text); }
+
+.logHash {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.logEntry.ok    .logMsg { color: var(--accent-teal); }
+.logEntry.error .logMsg { color: #E88; }
+.logEntry.pending .logMsg { color: var(--muted); }
+
+.emptyLog { color: var(--muted); font-size: 12px; }

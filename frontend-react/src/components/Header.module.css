@@ -1,0 +1,95 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96px;
+  padding: 0 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--text);
+}
+
+.dot {
+  color: var(--accent-red);
+}
+
+.subtitle {
+  border-left: 1px solid var(--border);
+  padding-left: 24px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.netStatus {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.netStatus.ok {
+  color: var(--accent-teal);
+}
+
+.dot2 {
+  opacity: 0.7;
+}
+
+.connectBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-red);
+  color: var(--text);
+  border: none;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.connectBtn:hover {
+  opacity: 0.85;
+}
+
+.walletBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 10px 16px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.walletBtn:hover {
+  border-color: var(--muted);
+}
+
+.walletBtn svg {
+  color: var(--accent-teal);
+}

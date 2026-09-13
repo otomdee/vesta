@@ -1,0 +1,366 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 0.8fr 1.65fr;
+  gap: 56px;
+  padding: 48px 48px 40px;
+  flex: 1;
+}
+
+/* ── Aside ── */
+.aside {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepLabel {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.hero {
+  margin: 36px 0 0;
+  font-family: var(--font-display);
+  font-size: 64px;
+  line-height: 0.98;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.heroAccent {
+  color: var(--accent-teal);
+}
+
+.intro {
+  margin: 28px 0 0;
+  max-width: 290px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.lifecycle {
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.lifecycleTitle {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin: 0 0 20px;
+  text-transform: uppercase;
+}
+
+.lifecycleSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lifecycleItem {
+  font-size: 13px;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.lifecycleNum {
+  font-family: var(--font-mono);
+  margin-right: 20px;
+  min-width: 24px;
+}
+
+.numActive { color: var(--accent-teal); }
+.numDim    { color: var(--muted-dark);  }
+
+.credit {
+  margin-top: auto;
+  padding-top: 48px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── Card ── */
+.card {
+  background: var(--card);
+  padding: 36px;
+  color: var(--bg);
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 0;
+}
+
+.cardLabel {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted-dark);
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cardId {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--bg);
+}
+
+.cardDesc {
+  margin: 20px 0 0;
+  font-size: 13px;
+  color: var(--muted-dark);
+}
+
+/* ── Inputs ── */
+.inputLabel {
+  display: block;
+  margin-top: 28px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bg);
+}
+
+.input {
+  display: block;
+  margin-top: 8px;
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--card-border);
+  background: #F5EAD5;
+  padding: 0 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--bg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input::placeholder { color: #8A755C; }
+.input:focus { border-color: var(--bg); }
+
+.inputHint {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted-dark);
+}
+
+/* ── Load button ── */
+.loadBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+  padding: 14px 20px;
+  background: var(--bg);
+  color: #F5EAD5;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.loadBtn:hover:not(:disabled) { opacity: 0.85; }
+.loadBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Details / settings ── */
+.details {
+  margin-top: 16px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 16px;
+  font-size: 12px;
+}
+
+.summary {
+  cursor: pointer;
+  color: var(--muted-dark);
+  user-select: none;
+}
+
+.detailsLabel {
+  display: block;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--bg);
+}
+
+.detailsInput {
+  display: block;
+  margin-top: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--card-border);
+  background: #F5EAD5;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--bg);
+  outline: none;
+}
+
+.savedBtn {
+  margin-top: 12px;
+  border: 1px solid var(--muted-dark);
+  background: transparent;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  color: var(--bg);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.savedBtn:hover { background: rgba(0,0,0,0.06); }
+
+/* ── Role cards ── */
+.roleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.roleTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.roleHint {
+  font-size: 12px;
+  color: var(--muted-dark);
+}
+
+.roleCards {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.roleCard {
+  padding: 20px;
+}
+
+.roleCardDark {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.roleCardLight {
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--bg);
+}
+
+.roleTag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.roleTagLight {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted-dark);
+  text-transform: uppercase;
+}
+
+.roleName {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.roleNameLight {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 8px 0;
+  color: var(--bg);
+}
+
+.roleDesc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+.roleDescLight {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted-dark);
+  margin: 0 0 20px;
+}
+
+.roleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-top: 1px solid;
+  padding-top: 12px;
+  background: transparent;
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.roleBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+.roleBtn:hover:not(:disabled) { opacity: 0.7; }
+
+.roleBtnDark {
+  border-top-color: var(--border);
+  color: var(--muted);
+}
+
+.roleBtnLight {
+  border-top-color: var(--card-border);
+  color: var(--muted-dark);
+}
+
+.disclaimer {
+  margin-top: 20px;
+  font-size: 11px;
+  color: var(--muted-dark);
+}

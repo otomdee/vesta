@@ -1,0 +1,93 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.steps {
+  border-left: 1px solid var(--border);
+}
+
+.step {
+  border-left: 2px solid transparent;
+  padding: 0 0 24px 20px;
+  margin-left: -1px;
+  transition: border-color 0.2s;
+}
+
+.step.complete {
+  border-left-color: var(--accent-teal);
+}
+
+.step.active {
+  border-left-color: var(--accent-red);
+  background: var(--accent-red);
+  padding: 20px;
+  margin-bottom: 0;
+}
+
+.stepNum {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.step.complete .stepNum {
+  color: var(--accent-teal);
+}
+
+.step.active .stepNum {
+  color: var(--text);
+}
+
+.stepLabel {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--text);
+}
+
+.step:not(.active) .stepLabel {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.stepSub {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.step.active .stepSub {
+  color: var(--text);
+}
+
+.ownerNote {
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.ownerOk {
+  font-size: 12px;
+  color: var(--accent-teal);
+  margin: 0 0 8px;
+}
+
+.ownerSub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
