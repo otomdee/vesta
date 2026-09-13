@@ -11,12 +11,33 @@
   flex: 1;
 }
 
+@media (max-width: 960px) {
+  .main {
+    padding: 24px 32px 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 20px 20px 24px;
+  }
+}
+
 /* ── Title row ── */
 .titleRow {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 32px;
+}
+
+@media (max-width: 640px) {
+  .titleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
 }
 
 .pageTag {
@@ -36,10 +57,24 @@
   line-height: 1;
 }
 
+@media (max-width: 640px) {
+  .pageTitle {
+    font-size: 36px;
+  }
+}
+
 .walletRow {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .walletRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .walletBadge {
@@ -90,6 +125,13 @@
   grid-template-columns: 240px 1fr;
   gap: 32px;
   align-items: start;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .panels {
@@ -192,6 +234,12 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 12px;
+}
+
+@media (max-width: 480px) {
+  .bidGrid, .enrollGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Inputs ── */
@@ -307,6 +355,11 @@
 /* ── Bids table ── */
 .bidsSection { margin-top: 24px; }
 
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .subTitle {
   font-family: var(--font-display);
   font-size: 18px;
@@ -421,6 +474,12 @@
 .activity {
   margin-top: 24px;
   margin-left: 272px;
+}
+
+@media (max-width: 960px) {
+  .activity {
+    margin-left: 0;
+  }
 }
 
 .activityHeader {

@@ -6,12 +6,13 @@ import Footer from "../components/Footer.jsx";
 import styles from "./EntryPage.module.css";
 
 export default function EntryPage() {
-  const { connect, loadDeploymentFile, connected, rpcUrl, setRpcUrl } = useVesta();
+  const { connect, loadDeploymentFile, connected, rpcUrl, setRpcUrl } =
+    useVesta();
   const navigate = useNavigate();
 
   const [strategy, setStrategy] = useState("");
-  const [auction, setAuction]   = useState("");
-  const [loading, setLoading]   = useState(false);
+  const [auction, setAuction] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
   const handleLoad = async () => {
@@ -30,8 +31,8 @@ export default function EntryPage() {
   };
 
   const LIFECYCLE = [
-    { n: "01", label: "CCA bidding",           active: true  },
-    { n: "02", label: "Auction ends",           active: false },
+    { n: "01", label: "CCA bidding", active: true },
+    { n: "02", label: "Auction ends", active: false },
     { n: "03", label: "Participants exit bids", active: false },
     { n: "04", label: "Team finalizes covenants", active: false },
     { n: "05", label: "Liquidity migrates to LP", active: false },
@@ -47,13 +48,16 @@ export default function EntryPage() {
           <p className={styles.stepLabel}>01 / LAUNCH INTAKE</p>
 
           <h1 className={styles.hero}>
-            A launch.<br />
-            A shared<br />
+            A launch.
+            <br />
+            A shared
+            <br />
             <span className={styles.heroAccent}>commitment.</span>
           </h1>
 
           <p className={styles.intro}>
-            Connect a CCA auction to covenant liquidity. One launch record, two ways to participate.
+            Connect a CCA auction to covenant liquidity. One launch record, two
+            ways to participate.
           </p>
 
           <div className={styles.lifecycle}>
@@ -61,7 +65,9 @@ export default function EntryPage() {
             <div className={styles.lifecycleSteps}>
               {LIFECYCLE.map((s) => (
                 <p key={s.n} className={styles.lifecycleItem}>
-                  <span className={`${styles.lifecycleNum} ${s.active ? styles.numActive : styles.numDim}`}>
+                  <span
+                    className={`${styles.lifecycleNum} ${s.active ? styles.numActive : styles.numDim}`}
+                  >
                     {s.n}
                   </span>
                   {s.label}
@@ -70,7 +76,9 @@ export default function EntryPage() {
             </div>
           </div>
 
-          <p className={styles.credit}>Built for CCA · Powered by Uniswap v4</p>
+          <p className={styles.credit}>
+            Built by <a href="https://x.com/0x_Money">0x</a>
+          </p>
         </aside>
 
         {/* Right card */}
@@ -121,7 +129,14 @@ export default function EntryPage() {
             disabled={loading}
           >
             {loading ? "Loading…" : "Load contracts"}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
@@ -153,7 +168,9 @@ export default function EntryPage() {
           <div className={styles.roleHeader}>
             <h3 className={styles.roleTitle}>Choose your role</h3>
             <span className={styles.roleHint}>
-              {connected ? "Select a view to continue" : "Load contracts to enable access"}
+              {connected
+                ? "Select a view to continue"
+                : "Load contracts to enable access"}
             </span>
           </div>
 
@@ -170,7 +187,14 @@ export default function EntryPage() {
                 onClick={() => navigate("/team")}
               >
                 Enter as team
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M7 17L17 7M7 7h10v10" />
                 </svg>
               </button>
@@ -188,7 +212,14 @@ export default function EntryPage() {
                 onClick={() => navigate("/participant")}
               >
                 Enter as participant
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M7 17L17 7M7 7h10v10" />
                 </svg>
               </button>
@@ -196,7 +227,8 @@ export default function EntryPage() {
           </div>
 
           <p className={styles.disclaimer}>
-            Team transactions require the strategy owner's wallet. No private keys are stored.
+            Team transactions require the strategy owner's wallet. No private
+            keys are stored.
           </p>
         </section>
       </main>

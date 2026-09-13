@@ -99,6 +99,7 @@ export default function TeamPage() {
                 <span className={styles.tableCount}>{readyCount} of {participantRows.length} ready</span>
               </div>
 
+              <div className={styles.tableWrapper}>
               <table className={styles.table}>
                 <thead>
                   <tr>
@@ -133,6 +134,7 @@ export default function TeamPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* Launch ledger + Fund rewards */}

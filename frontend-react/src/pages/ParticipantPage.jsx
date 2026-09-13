@@ -162,6 +162,7 @@ export default function ParticipantPage() {
               {myBids.length > 0 && (
                 <div className={styles.bidsSection}>
                   <h3 className={styles.subTitle}>My bids</h3>
+                  <div className={styles.tableWrapper}>
                   <table className={styles.bidsTable}>
                     <thead>
                       <tr>
@@ -192,6 +193,7 @@ export default function ParticipantPage() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               )}
 

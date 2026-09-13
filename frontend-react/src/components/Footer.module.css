@@ -8,3 +8,11 @@
   color: var(--muted);
   text-transform: uppercase;
 }
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
